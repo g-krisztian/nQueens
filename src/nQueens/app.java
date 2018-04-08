@@ -1,21 +1,29 @@
 package nQueens;
 
-import java.util.concurrent.ConcurrentLinkedDeque;
-
 public class app {
 
 	public static void main(String[] args) {
-		final int SIZE = 3;
+		final int SIZE = 5;
 		byte[] firstField = new byte[SIZE];
-		int[] previousQueens = new int[SIZE];
-		ConcurrentLinkedDeque<int[]> resultSet = new ConcurrentLinkedDeque<>();
+		int[] noQueens = new int[SIZE];
+		RowRunnerService rowRunnerService = new RowRunnerServiceJava();
+		RowResultService resultService = new RowResultService();
 		
-		Row firstRow = new Row(firstField, previousQueens, 0);
-		RowRunnerService threadService = new RowRunnerServiceJava();
-		threadService.add(firstRow);
-		threadService.start();
+		Row firstRow = new Row();
+		firstRow.setColumn(0);
+		firstRow.setLength(SIZE);
+		firstRow.setCurrentRow(firstField);
+		firstRow.setCurrentQueens(noQueens);
 		
+		rowRunnerService.setResultService(resultService);
+		rowRunnerService.add(firstRow);
 		
+		 
+		boolean run = true;
+		 while (run) {
+			run = !rowRunnerService.getRowThreadPool().isTerminated(); 
+		 }
+		resultService.print();
 	}
 
 }

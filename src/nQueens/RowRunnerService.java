@@ -1,9 +1,15 @@
 package nQueens;
 
+import java.util.concurrent.ExecutorService;
+
 public interface RowRunnerService {
 
-	void add(Row firstRow);
+	void add(Row row);
 
-	void start();
+
+	void setResultService(RowResultService resultService);
+
+
+	ExecutorService getRowThreadPool();
 
 }

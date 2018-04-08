@@ -1,31 +1,35 @@
 package nQueens;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class RowRunnerServiceJava implements RowRunnerService {
-	ConcurrentLinkedQueue<Row> rowQueue;
-	private OperatingSystemMXBean mxBean;
-	
-	
-	public RowRunnerServiceJava() {
-		rowQueue = new ConcurrentLinkedQueue<>();
-		mxBean = ManagementFactory.getOperatingSystemMXBean();
+	private ExecutorService rowThreadPool;
+
+	@Override
+	public ExecutorService getRowThreadPool() {
+		return rowThreadPool;
 	}
 
+	private RowResultService resultService;
+
+	public RowRunnerServiceJava() {
+		rowThreadPool = Executors.newCachedThreadPool();
+	}
 
 	@Override
 	public void add(Row row) {
-		rowQueue.add(row);
-	}
+		RowThread rowRunnable = new RowThread();
+		rowRunnable.setCurrentRow(row);
+		rowRunnable.setResultService(resultService);
+		rowRunnable.setRowRunnerService(getRowThreadPool());
 
+		rowThreadPool.execute(rowRunnable);
+	}
 
 	@Override
-	public void start() {
-		// TODO Auto-generated method stub
-		
+	public void setResultService(RowResultService resultService) {
+		this.resultService = resultService;
+
 	}
-	
-	
 }
