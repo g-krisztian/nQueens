@@ -23,8 +23,8 @@ public class RowRunnerServiceJava implements RowRunnerService {
 		rowRunnable.setCurrentRow(row);
 		rowRunnable.setResultService(resultService);
 		rowRunnable.setRowRunnerService(getRowThreadPool());
-
-		rowThreadPool.execute(rowRunnable);
+		rowRunnable.run();
+		//rowThreadPool.execute(rowRunnable);
 	}
 
 	@Override

@@ -7,11 +7,6 @@ public class Row {
 	private int length;
 	private int column;
 
-	public void addQueen(int index) {
-		currentRow[index] = QUEEN;
-		currentQueens[column] = index;
-	}
-
 	public byte[] getCurrentRow() {
 		return currentRow;
 	}

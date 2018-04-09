@@ -6,7 +6,6 @@ public class RowThread implements Runnable {
 
 	private Row currentRow;
 	private int length;
-	private int column;
 
 	private ExecutorService rowRunnerService;
 
@@ -19,30 +18,49 @@ public class RowThread implements Runnable {
 	public void run() {
 
 		current = currentRow.getCurrentRow();
+		System.out.println(current);
 		int lastColumn = current.length - 1;
 		for (int i = 0; i < length; i++) {
 			if (current[i] == 0) {
-				if (column == lastColumn) {
+				if (currentRow.getColumn() == lastColumn) {
 					resultService.add(currentRow.getCurrentQueens(), i);
+					System.out.println("queenAdding: " + i);
 				} else {
+
 					if (nextRowProtoType == null) {
 						nextRowProtoType = createProto();
 					}
 					Row nextRow = new Row();
-					nextRow.setColumn(column + 1);
+					nextRow.setColumn(currentRow.getColumn() + 1);
 					nextRow.setCurrentQueens(currentRow.getCurrentQueens());
 					nextRow.setCurrentRow(nextRowProtoType);
-					nextRow.addQueen(i);
+					nextRow.setLength(length);
+					addQueen(nextRow, i);
 					RowThread nextThread = new RowThread();
 					nextThread.setCurrentRow(nextRow);
 					nextThread.setResultService(resultService);
 					nextThread.setRowRunnerService(rowRunnerService);
-					System.out.println(nextRow.getColumn());
-					rowRunnerService.execute(nextThread);
+					nextThread.run();
+					// rowRunnerService.execute(nextThread);
 				}
 			}
 		}
 
+	}
+
+	private void addQueen(Row row, int i) {
+		int[] currentQueens = row.getCurrentQueens();
+		currentQueens[currentRow.getColumn()] = i;
+		row.setCurrentQueens(currentQueens);
+		byte[] nextRow = row.getCurrentRow();
+		if (i != 0) {
+			nextRow[i - 1] += 1;
+		}
+		nextRow[i] += 2;
+		if (i != length - 1) {
+			nextRow[i + 1] += 4;
+		}
+		row.setCurrentRow(nextRow);
 	}
 
 	private byte[] createProto() {

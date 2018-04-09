@@ -14,6 +14,7 @@ public class RowResultService {
 	}
 
 	public void print() {
+		System.out.print("print resultset: " + resultSet + ": ");
 		for (int[] is : resultSet) {
 			for (int i : is) {
 				System.out.print(i + ", ");
