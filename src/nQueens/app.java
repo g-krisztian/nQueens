@@ -14,10 +14,12 @@ public class app {
 		firstRow.setLength(SIZE);
 		firstRow.setCurrentRow(firstField);
 		firstRow.setCurrentQueens(noQueens);
+		RowThread rowThread = new RowThread();
 		
-		rowRunnerService.setResultService(resultService);
-		rowRunnerService.add(firstRow);
-		
+		rowThread.setCurrentRow(firstRow);
+		rowThread.setResultService(resultService);
+		//rowThread.setRowRunnerService(executorService);
+		rowThread.run();
 		 
 //		boolean run = true;
 //		 while (run) {

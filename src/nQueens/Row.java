@@ -1,7 +1,6 @@
 package nQueens;
 
 public class Row {
-	private static final byte QUEEN = 7;
 	private byte[] currentRow;
 	private int[] currentQueens;
 	private int length;

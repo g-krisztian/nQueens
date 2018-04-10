@@ -22,7 +22,7 @@ public class RowThread implements Runnable {
 		int lastColumn = current.length - 1;
 		for (int i = 0; i < length; i++) {
 			if (current[i] == 0) {
-				if (currentRow.getColumn() == lastColumn) {
+				if (currentRow.getColumn() == length-1) {
 					resultService.add(currentRow.getCurrentQueens(), i);
 					System.out.println("queenAdding: " + i);
 				} else {
@@ -77,12 +77,6 @@ public class RowThread implements Runnable {
 		return response;
 	}
 
-	private Row createNextRow(int i) {
-
-		return null;
-		// TODO Auto-generated method stub
-
-	}
 
 	public void setRowRunnerService(ExecutorService executorService) {
 		this.rowRunnerService = executorService;
