@@ -28,7 +28,6 @@ public class Row {
 		this.length = length;
 	}
 
-
 	public void setColumn(int column) {
 		this.column = column;
 	}
@@ -39,6 +38,32 @@ public class Row {
 
 	public int[] getCurrentQueens() {
 		return currentQueens;
+	}
+
+	public void printTable() {
+		for (int i = 0; i < column; i++) {
+			printQueens(i);
+		}
+		printCurrent();
+		System.out.println();
+	}
+
+	private void printQueens(int index) {
+		for (int i = 0; i < length; i++) {
+			if (currentQueens[index] == i)
+				System.out.print("Q ");
+			else
+				System.out.print("_ ");
+		}
+		System.out.println();
+	}
+
+	private void printCurrent() {
+
+		for (byte b : currentRow) {
+			System.out.print(b + " ");
+		}
+		System.out.println();
 	}
 
 }

@@ -18,7 +18,7 @@ public class RowThread implements Runnable {
 	public void run() {
 
 		current = currentRow.getCurrentRow();
-		System.out.println(current);
+		currentRow.printTable();
 		int lastColumn = current.length - 1;
 		for (int i = 0; i < length; i++) {
 			if (current[i] == 0) {
@@ -48,9 +48,11 @@ public class RowThread implements Runnable {
 
 	}
 
+
+
 	private void addQueen(Row row, int i) {
 		int[] currentQueens = row.getCurrentQueens();
-		currentQueens[currentRow.getColumn()] = i;
+		currentQueens[currentRow.getColumn()] = i+1;
 		row.setCurrentQueens(currentQueens);
 		byte[] nextRow = row.getCurrentRow();
 		if (i != 0) {

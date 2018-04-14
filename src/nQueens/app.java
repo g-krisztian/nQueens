@@ -3,7 +3,7 @@ package nQueens;
 public class app {
 
 	public static void main(String[] args) {
-		final int SIZE = 4;
+		final int SIZE = 5;
 		byte[] firstField = new byte[SIZE];
 		int[] noQueens = new int[SIZE];
 		RowRunnerService rowRunnerService = new RowRunnerServiceJava();
