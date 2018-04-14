@@ -1,13 +1,20 @@
 package nQueens;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class app {
 
+
 	public static void main(String[] args) {
-		final int SIZE = 5;
+		final int SIZE = 12;
 		byte[] firstField = new byte[SIZE];
 		int[] noQueens = new int[SIZE];
-		RowRunnerService rowRunnerService = new RowRunnerServiceJava();
+		ExecutorService executorService = Executors.newCachedThreadPool();
 		RowResultService resultService = new RowResultService();
+		
+		RowRunnerService rowRunnerService = new RowRunnerServiceJava(executorService);
+
 		
 		Row firstRow = new Row();
 		firstRow.setColumn(0);
@@ -16,15 +23,15 @@ public class app {
 		firstRow.setCurrentQueens(noQueens);
 		RowThread rowThread = new RowThread();
 		
-		rowThread.setCurrentRow(firstRow);
+		rowThread.setRow(firstRow);
 		rowThread.setResultService(resultService);
-		//rowThread.setRowRunnerService(executorService);
-		rowThread.run();
-		 
-//		boolean run = true;
-//		 while (run) {
-//			run = !rowRunnerService.getRowThreadPool().isTerminated(); 
-//		 }
+		rowThread.setRowRunnerService(executorService);
+		//rowThread.run();
+		executorService.execute(rowThread);
+//		while (!executorService.isShutdown()) {
+//			
+//		}
+		
 		resultService.print();
 	}
 

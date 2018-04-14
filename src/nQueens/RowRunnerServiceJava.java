@@ -1,35 +1,19 @@
 package nQueens;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class RowRunnerServiceJava implements RowRunnerService {
+public class RowRunnerServiceJava implements RowRunnerService{
 	private ExecutorService rowThreadPool;
+	Long runningThreads; 
 
-	@Override
-	public ExecutorService getRowThreadPool() {
-		return rowThreadPool;
-	}
-
-	private RowResultService resultService;
-
-	public RowRunnerServiceJava() {
-		rowThreadPool = Executors.newCachedThreadPool();
+	public RowRunnerServiceJava(ExecutorService executorService) {
+		rowThreadPool = executorService;
 	}
 
 	@Override
 	public void add(Row row) {
-		RowThread rowRunnable = new RowThread();
-		rowRunnable.setCurrentRow(row);
-		rowRunnable.setResultService(resultService);
-		rowRunnable.setRowRunnerService(getRowThreadPool());
-		rowRunnable.run();
-		//rowThreadPool.execute(rowRunnable);
+		// TODO Auto-generated method stub
+		
 	}
 
-	@Override
-	public void setResultService(RowResultService resultService) {
-		this.resultService = resultService;
-
-	}
 }

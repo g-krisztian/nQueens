@@ -10,11 +10,11 @@ public class RowResultService {
 		int[] result = new int[previousQueens.length];
 		System.arraycopy(previousQueens, 0, result, 0, previousQueens.length);
 		result[result.length - 1] = lastQueen;
-		resultSet.add(previousQueens);
+		resultSet.add(result);
+		System.out.println("Nb of results: " + resultSet.size());
 	}
 
 	public void print() {
-		System.out.print("print resultset: " + resultSet + ": ");
 		for (int[] is : resultSet) {
 			for (int i : is) {
 				System.out.print(i + ", ");
@@ -22,6 +22,7 @@ public class RowResultService {
 			System.out.println();
 		}
 
+		System.out.println("Nb of results: " + resultSet.size());
 	}
 
 }
