@@ -1,12 +1,10 @@
 package nQueens;
 
-import java.util.concurrent.ExecutorService;
-
-public class RowThread implements Runnable {
+public class RowThread extends Thread {
 
 	private Row currentRow;
 
-	private ExecutorService rowRunnerService;
+	private RowRunnerService rowRunnerService;
 
 	private RowResultService resultService;
 
@@ -33,21 +31,17 @@ public class RowThread implements Runnable {
 					}
 					Row nextRow = new Row(nextRowProtoType);
 					addQueen(nextRow, i);
-					RowThread nextThread = new RowThread(nextRow);
-					nextThread.setResultService(resultService);
-					nextThread.setRowRunnerService(rowRunnerService);
-					//nextThread.run();
-					rowRunnerService.execute(nextThread);
+					rowRunnerService.add(nextRow);
 				}
 			}
 		}
-		nextRowProtoType=null;
-		
+		nextRowProtoType = null;
+
 	}
 
 	private Row createProto() {
 		Row row = new Row();
-		row.setColumn(currentRow.getColumn() +1);
+		row.setColumn(currentRow.getColumn() + 1);
 		row.setCurrentQueens(currentRow.getCurrentQueens());
 		row.setLength(currentRow.getLength());
 		row.setCurrentRow(computeNextRow());
@@ -62,24 +56,24 @@ public class RowThread implements Runnable {
 			}
 			result[i] += currentRow.getCurrentRow()[i] & 2;
 			if (i != result.length - 1) {
-				result[i] += currentRow.getCurrentRow()[i+1] & 1;
+				result[i] += currentRow.getCurrentRow()[i + 1] & 1;
 			}
 		}
 		return result;
 	}
 
 	private void addQueen(Row row, int i) {
-		if (i!=0) {
-			row.getCurrentRow()[i-1]+=1;
+		if (i != 0) {
+			row.getCurrentRow()[i - 1] += 1;
 		}
-		row.getCurrentRow()[i]+=2;
-		if (i!=currentRow.getLength()-1) {
-			row.getCurrentRow()[i+1]+=4;
+		row.getCurrentRow()[i] += 2;
+		if (i != currentRow.getLength() - 1) {
+			row.getCurrentRow()[i + 1] += 4;
 		}
-		row.getCurrentQueens()[currentRow.getColumn()]=i;
+		row.getCurrentQueens()[currentRow.getColumn()] = i;
 	}
 
-	public void setRowRunnerService(ExecutorService executorService) {
+	public void setRowRunnerService(RowRunnerService executorService) {
 		this.rowRunnerService = executorService;
 	}
 

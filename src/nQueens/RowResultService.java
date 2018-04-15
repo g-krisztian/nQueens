@@ -1,10 +1,10 @@
 package nQueens;
 
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class RowResultService {
 
-	ConcurrentLinkedDeque<int[]> resultSet = new ConcurrentLinkedDeque<>();
+	ConcurrentLinkedQueue<int[]> resultSet = new ConcurrentLinkedQueue<>();
 
 	public void add(int[] previousQueens, int lastQueen) {
 		int[] result = new int[previousQueens.length];

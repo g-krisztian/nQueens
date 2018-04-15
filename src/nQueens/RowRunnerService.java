@@ -4,4 +4,8 @@ public interface RowRunnerService {
 
 	void add(Row row);
 
+	int getRunning();
+
+	void start();
+
 }
