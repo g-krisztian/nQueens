@@ -16,9 +16,10 @@ public class app {
 		firstRow.setLength(SIZE);
 		firstRow.setCurrentRow(firstField);
 		firstRow.setCurrentQueens(noQueens);
-
-		rowRunnerService.add(firstRow);
 		
+		rowRunnerService.setResultService(resultService);
+		
+		rowRunnerService.add(firstRow);
 		rowRunnerService.start();
 
 		while (rowRunnerService.getRunning() > 0) {

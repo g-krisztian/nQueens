@@ -1,13 +1,12 @@
 package nQueens;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RowThread extends Thread {
-
 	private Row currentRow;
-
 	private RowRunnerService rowRunnerService;
-
 	private RowResultService resultService;
-
 	private Row nextRowProtoType = null;
 
 	public RowThread() {
@@ -20,7 +19,7 @@ public class RowThread extends Thread {
 
 	@Override
 	public void run() {
-
+		List<Row> compute= new ArrayList<>();
 		for (int i = 0; i < currentRow.getLength(); i++) {
 			if (currentRow.getCurrentRow()[i] == 0) {
 				if (currentRow.getColumn() == currentRow.getLength() - 1) {
@@ -31,10 +30,11 @@ public class RowThread extends Thread {
 					}
 					Row nextRow = new Row(nextRowProtoType);
 					addQueen(nextRow, i);
-					rowRunnerService.add(nextRow);
+					compute.add(nextRow);
 				}
 			}
 		}
+		rowRunnerService.add(compute);
 		nextRowProtoType = null;
 
 	}
