@@ -1,93 +1,100 @@
 package nQueens;
 
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class RowThread implements Runnable {
+public class RowThread extends Thread {
 
-	private Row currentRow;
-
-	private ExecutorService rowRunnerService;
 
 	private RowResultService resultService;
 
 	private Row nextRowProtoType = null;
 
-	public RowThread() {
+	private ConcurrentLinkedDeque<Row> queue;
+	private boolean running;
 
-	}
 
-	public RowThread(Row nextRow) {
-		this.currentRow = nextRow;
+	public RowThread(ConcurrentLinkedDeque<Row> queue, RowResultService resultService) {
+		this.queue = queue;
+		this.resultService = resultService;
 	}
 
 	@Override
 	public void run() {
+		running=true;
+		int failcount = 0;
 
-		for (int i = 0; i < currentRow.getLength(); i++) {
-			if (currentRow.getCurrentRow()[i] == 0) {
-				if (currentRow.getColumn() == currentRow.getLength() - 1) {
-					resultService.add(currentRow.getCurrentQueens(), i);
-				} else {
-					if (nextRowProtoType == null) {
-						nextRowProtoType = createProto();
+		while (failcount < 5) {
+			nextRowProtoType=null;
+			Row currentRow = null;
+			currentRow = queue.poll();
+			
+			if (currentRow != null) {
+				for (int i = 0; i < currentRow.getLength(); i++) {
+					if (currentRow.getCurrentRow()[i] == 0) {
+						if (currentRow.getColumn() == currentRow.getLength() - 1) {
+							resultService.add(currentRow.getCurrentQueens(), i);
+						} else {
+							if (nextRowProtoType == null) {
+								nextRowProtoType = createProto(currentRow);
+							}
+							Row nextRow = new Row(nextRowProtoType);
+							addQueen(nextRow, i);
+							queue.push(nextRow);
+						}
 					}
-					Row nextRow = new Row(nextRowProtoType);
-					addQueen(nextRow, i);
-					RowThread nextThread = new RowThread(nextRow);
-					nextThread.setResultService(resultService);
-					nextThread.setRowRunnerService(rowRunnerService);
-					//nextThread.run();
-					rowRunnerService.execute(nextThread);
 				}
+			} else {
+				failcount++;
+//				try {
+//					Thread.sleep(100);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
 			}
 		}
-		nextRowProtoType=null;
-		
+		running=false;
 	}
 
-	private Row createProto() {
+	private Row createProto(Row currentRow) {
 		Row row = new Row();
-		row.setColumn(currentRow.getColumn() +1);
+		row.setColumn(currentRow.getColumn() + 1);
 		row.setCurrentQueens(currentRow.getCurrentQueens());
 		row.setLength(currentRow.getLength());
-		row.setCurrentRow(computeNextRow());
+		row.setCurrentRow(computeNextRow(currentRow));
 		return row;
 	}
 
-	private byte[] computeNextRow() {
+	private byte[] computeNextRow(Row currentRow) {
 		byte[] result = new byte[currentRow.getLength()];
-		for (int i = 0; i < result.length; i++) {
+		for (int i = 0; i < currentRow.getLength(); i++) {
 			if (i != 0) {
 				result[i] += currentRow.getCurrentRow()[i - 1] & 4;
 			}
 			result[i] += currentRow.getCurrentRow()[i] & 2;
 			if (i != result.length - 1) {
-				result[i] += currentRow.getCurrentRow()[i+1] & 1;
+				result[i] += currentRow.getCurrentRow()[i + 1] & 1;
 			}
 		}
 		return result;
 	}
 
 	private void addQueen(Row row, int i) {
-		if (i!=0) {
-			row.getCurrentRow()[i-1]+=1;
+		if (i != 0) {
+			row.getCurrentRow()[i - 1] += 1;
 		}
-		row.getCurrentRow()[i]+=2;
-		if (i!=currentRow.getLength()-1) {
-			row.getCurrentRow()[i+1]+=4;
+		row.getCurrentRow()[i] += 2;
+		if (i != row.getLength() - 1) {
+			row.getCurrentRow()[i + 1] += 4;
 		}
-		row.getCurrentQueens()[currentRow.getColumn()]=i;
+		row.getCurrentQueens()[row.getColumn()-1] = i;
 	}
 
-	public void setRowRunnerService(ExecutorService executorService) {
-		this.rowRunnerService = executorService;
+	public boolean isRunning() {
+		return running;
 	}
 
-	public void setResultService(RowResultService resultService) {
-		this.resultService = resultService;
-	}
 
-	public void setRow(Row row) {
-		this.currentRow = row;
-	}
+
+
+
 }

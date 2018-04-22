@@ -1,37 +1,49 @@
 package nQueens;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class app {
 
-
 	public static void main(String[] args) {
-		final int SIZE = 12;
-		byte[] firstField = new byte[SIZE];
-		int[] noQueens = new int[SIZE];
-		ExecutorService executorService = Executors.newCachedThreadPool();
-		RowResultService resultService = new RowResultService();
 		
-		RowRunnerService rowRunnerService = new RowRunnerServiceJava(executorService);
+		int size;
+		int cores = Runtime.getRuntime().availableProcessors();
 
+		size=Integer.parseInt(args[0]);
 		
+		if (args.length>1) {
+			cores=Integer.parseInt(args[1]);
+		}
+
+		byte[] firstField = new byte[size];
+		int[] noQueens = new int[size];
+		RowResultService resultService = new RowResultService(size);
+		ConcurrentLinkedDeque<Row> queue = new ConcurrentLinkedDeque<>();
+
 		Row firstRow = new Row();
 		firstRow.setColumn(0);
-		firstRow.setLength(SIZE);
+		firstRow.setLength(size);
 		firstRow.setCurrentRow(firstField);
 		firstRow.setCurrentQueens(noQueens);
-		RowThread rowThread = new RowThread();
-		
-		rowThread.setRow(firstRow);
-		rowThread.setResultService(resultService);
-		rowThread.setRowRunnerService(executorService);
-		//rowThread.run();
-		executorService.execute(rowThread);
-//		while (!executorService.isShutdown()) {
-//			
-//		}
-		
+
+		queue.push(firstRow);
+
+
+		List<RowThread> threadPool = new ArrayList<>();
+
+		for (int i = 0; i <= cores; i++) {
+
+			RowThread rowThread = new RowThread(queue, resultService);
+			rowThread.start();
+		}
+
+		while (!queue.isEmpty()) {
+
+			
+		}
+		System.out.println("Number of threads: " + cores);
 		resultService.print();
 	}
 

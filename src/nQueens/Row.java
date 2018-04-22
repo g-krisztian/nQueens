@@ -1,3 +1,4 @@
+
 package nQueens;
 
 public class Row {
@@ -5,20 +6,20 @@ public class Row {
 	private int[] currentQueens;
 	private int length;
 	private int column;
-	
+
 	public Row() {
-		
+
 	}
 
 	public Row(Row row) {
 		this.length = row.getLength();
-		this.column =row.getColumn();
+		this.column = row.getColumn();
 		this.currentRow = new byte[length];
 		this.currentQueens = new int[length];
 
-		System.arraycopy(row.getCurrentRow(),0 , this.currentRow, 0, length);
-		System.arraycopy(row.getCurrentQueens(),0,this.currentQueens,0,length);
-		
+		System.arraycopy(row.getCurrentRow(), 0, this.currentRow, 0, length);
+		System.arraycopy(row.getCurrentQueens(), 0, this.currentQueens, 0, length);
+
 	}
 
 	public void printTable() {
