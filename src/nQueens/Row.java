@@ -1,4 +1,3 @@
-
 package nQueens;
 
 public class Row {

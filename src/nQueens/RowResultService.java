@@ -1,4 +1,3 @@
-
 package nQueens;
 
 import java.time.Instant;
@@ -39,6 +38,10 @@ public class RowResultService {
 			}
 			System.out.println();
 		}
+	}
+
+	public int getSize() {
+		return size;
 	}
 
 }
