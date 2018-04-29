@@ -2,7 +2,6 @@ package nQueens;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class app {
 
@@ -20,7 +19,7 @@ public class app {
 		byte[] firstField = new byte[size];
 		int[] noQueens = new int[size];
 		RowResultService resultService = new RowResultService(size);
-		ConcurrentLinkedDeque<Row> queue = new ConcurrentLinkedDeque<Row>();
+		SimpleConcurentFifo queue = new SimpleConcurentFifo();
 
 		Row firstRow = new Row();
 		firstRow.setColumn(0);
@@ -28,7 +27,7 @@ public class app {
 		firstRow.setCurrentRow(firstField);
 		firstRow.setCurrentQueens(noQueens);
 
-		queue.add(firstRow);
+		queue.push(firstRow);
 
 		List<RowThread> threadPool = new ArrayList<>();
 
@@ -38,17 +37,12 @@ public class app {
 			threadPool.add(rowThread);
 			rowThread.start();
 		}
-		
-		while (queue.size()>0) {
-			Thread.sleep(100);
-		}
-		
+
 		for (RowThread rowThread : threadPool) {
-			while (rowThread.isAlive()) {
-			}
+			rowThread.join();
 		}
 
-		System.out.println("Number of threads: " + cores);
+		System.out.print("Number of threads: " + cores);
 		resultService.print();
 	}
 

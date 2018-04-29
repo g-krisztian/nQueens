@@ -27,7 +27,7 @@ public class RowResultService {
 		last = Date.from(Instant.now());
 		// printTables();
 
-		System.out.println("Table size: " + size + "\nNb of results: " + resultSet.size() + "\nCalculated in: "
+		System.out.println("\tTable size: " + size + "\tNb of results: " + resultSet.size() + "\tCalculated in: "
 				+ (last.getTime() - start.getTime()) + "ms");
 	}
 

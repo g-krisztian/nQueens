@@ -1,16 +1,14 @@
 package nQueens;
 
-import java.util.concurrent.ConcurrentLinkedDeque;
-
 public class RowThread extends Thread {
 
 	private RowResultService resultService;
 
-	ConcurrentLinkedDeque<Row> queue;
+	SimpleConcurentFifo queue;
 
 	private int length;
 
-	public RowThread(ConcurrentLinkedDeque<Row> queue, RowResultService resultService) {
+	public RowThread(SimpleConcurentFifo queue, RowResultService resultService) {
 		this.queue = queue;
 		this.resultService = resultService;
 		length=resultService.getSize();
@@ -37,7 +35,7 @@ public class RowThread extends Thread {
 							}
 							nextRow = new Row(nextRowProtoType);
 							addQueen(nextRow, i);
-							queue.add(nextRow);
+							queue.push(nextRow);
 						}
 					}
 				}
