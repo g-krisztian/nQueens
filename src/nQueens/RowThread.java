@@ -11,17 +11,17 @@ public class RowThread extends Thread {
 	public RowThread(SimpleConcurentFifo queue, RowResultService resultService) {
 		this.queue = queue;
 		this.resultService = resultService;
-		length=resultService.getSize();
+		length = resultService.getSize();
 	}
 
 	@Override
 	public void run() {
 		int failcount = 0;
-		Row nextRowProtoType= new Row();
+		Row nextRowProtoType = new Row();
 		Row nextRow;
 		Row currentRow = null;
 		while (failcount < 5) {
-			boolean hasPrototype=false;
+			boolean hasPrototype = false;
 			currentRow = queue.poll();
 			if (currentRow != null) {
 				for (int i = 0; i < length; ++i) {
@@ -31,7 +31,7 @@ public class RowThread extends Thread {
 						} else {
 							if (!hasPrototype) {
 								nextRowProtoType = createProto(currentRow);
-								hasPrototype=true;
+								hasPrototype = true;
 							}
 							nextRow = new Row(nextRowProtoType);
 							addQueen(nextRow, i);
@@ -42,6 +42,7 @@ public class RowThread extends Thread {
 			} else {
 				failcount++;
 			}
+			currentRow = null;
 		}
 	}
 

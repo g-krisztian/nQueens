@@ -23,10 +23,13 @@ public class SimpleConcurentFifo {
 			if (head.row == null)
 				return null;
 			Row result = head.row;
+			Block oldHead=head;
 			head = head.next;
 			size--;
+			oldHead.row=null;
+			oldHead.next=null;
+			oldHead=null;
 			return result;
-
 		}
 	}
 

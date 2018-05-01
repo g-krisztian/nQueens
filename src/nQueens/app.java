@@ -1,13 +1,13 @@
 package nQueens;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class app {
 
+	private static int size;
+
 	public static void main(String[] args) throws InterruptedException {
 
-		int size;
 		int cores = Runtime.getRuntime().availableProcessors();
 
 		size = Integer.parseInt(args[0]);
@@ -16,34 +16,50 @@ public class app {
 			cores = Integer.parseInt(args[1]);
 		}
 
-		byte[] firstField = new byte[size];
-		int[] noQueens = new int[size];
 		RowResultService resultService = new RowResultService(size);
-		SimpleConcurentFifo queue = new SimpleConcurentFifo();
 
-		Row firstRow = new Row();
-		firstRow.setColumn(0);
-		firstRow.setLength(size);
-		firstRow.setCurrentRow(firstField);
-		firstRow.setCurrentQueens(noQueens);
+		ConcurrentLinkedDeque<RowThread> threadPool = new ConcurrentLinkedDeque<>();
 
-		queue.push(firstRow);
+		for (int threads = 0; threads < size;) {
+			for (int i = 0; i <= cores-1; i++) {
+				if (threads < size) {
+					SimpleConcurentFifo queue = new SimpleConcurentFifo();
+					Row second = createSecond(threads);
+					queue.push(second);
+					RowThread rowThread = new RowThread(queue, resultService);
+					threadPool.add(rowThread);
+					rowThread.start();
+					threads++;
+				}
+			}
 
-		List<RowThread> threadPool = new ArrayList<>();
-
-		for (int i = 0; i <= cores; i++) {
-
-			RowThread rowThread = new RowThread(queue, resultService);
-			threadPool.add(rowThread);
-			rowThread.start();
-		}
-
-		for (RowThread rowThread : threadPool) {
-			rowThread.join();
+			for (RowThread rowThread : threadPool) {
+				rowThread.join();
+				threadPool.remove(rowThread);
+			}
 		}
 
 		System.out.print("Number of threads: " + cores);
 		resultService.print();
+	}
+
+	private static Row createSecond(int position) {
+		Row result = new Row();
+		result.setColumn(1);
+		int[] currentQueens = new int[size];
+		byte[] currentRow = new byte[size];
+
+		currentQueens[0] = position;
+
+		if (position != 0)
+			currentRow[position - 1] += 1;
+		currentRow[position] += 2;
+		if (position != size - 1)
+			currentRow[position + 1] += 4;
+		result.setCurrentQueens(currentQueens);
+		result.setCurrentRow(currentRow);
+		result.setLength(size);
+		return result;
 	}
 
 }
